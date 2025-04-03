@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -29,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -38,21 +36,17 @@ import com.example.gstore_android.R
 
 
 @Composable
-fun SignupScreen(navigateToLogin: () -> Unit) {
+fun LoginScreen(navigateToSignup: () -> Unit) {
 
-    val focus = LocalFocusManager.current
 
-    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
 
     Box(modifier = Modifier.background(color = Color.DarkGray).fillMaxSize(), contentAlignment = Alignment.Center )  {
         Column(modifier = Modifier.background(color = Color.DarkGray).padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally ,
             verticalArrangement = Arrangement.SpaceBetween)  {
-
-            OutlinedTextField(value = name, onValueChange = {name = it },
-                modifier = Modifier.padding(4.dp), label = {   Icon(imageVector = Icons.Default.Person, contentDescription = "icon")} , placeholder = {Text("Name")})
             OutlinedTextField(value = email, onValueChange = {email = it }, modifier = Modifier.padding(4.dp),
                 label = {   Icon(imageVector = Icons.Default.Email,
                     contentDescription = "icon")}, placeholder = {Text("Email")} )
@@ -60,23 +54,26 @@ fun SignupScreen(navigateToLogin: () -> Unit) {
                 Icon(imageVector = Icons.Default.Lock, contentDescription = "icon")},
                 placeholder = {Text("Password")}  )
             Spacer(modifier = Modifier.size(30.dp))
-            Button(onClick = {} , colors = ButtonDefaults.buttonColors(Color.Blue)) { Text("Sign Up", color = Color.White )}
+            Button(onClick = {} , colors = ButtonDefaults.buttonColors(Color.Blue)) { Text("Login", color = Color.White )}
+            HorizontalDivider(modifier = Modifier.padding(10.dp), thickness = 4.dp )
+            Text(text =  "Login with your Google Account here", fontSize = 14.sp, fontFamily = FontFamily.SansSerif , modifier = Modifier.clickable{ })
             Spacer(modifier = Modifier.size(30.dp))
             Button(onClick = {}, colors = ButtonDefaults.buttonColors(Color.Blue) ) {
 
                 Row ( horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
                     Image(painter = painterResource(R.drawable.glogo_foreground), contentDescription = "g", modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.size(8.dp))
-                    Text("Sign up with Google", color = Color.White)
+                    Text("Sign in with Google", color = Color.White)
                 }
             }
             HorizontalDivider(modifier = Modifier.padding(10.dp), thickness = 4.dp )
-            Text(text =  "Do you already have an account, login here", fontSize = 14.sp, fontFamily = FontFamily.SansSerif , modifier = Modifier.clickable{ navigateToLogin() })
+            Text(text =  "Do not have an account?, Sign up here", fontSize = 14.sp, fontFamily = FontFamily.SansSerif , modifier = Modifier.clickable{ navigateToSignup()})
+
+
 
 
         }
     }
-
 
 
 }

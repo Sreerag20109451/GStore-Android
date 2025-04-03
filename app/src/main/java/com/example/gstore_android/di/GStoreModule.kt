@@ -19,15 +19,12 @@ import javax.inject.Singleton
 class GStoreModule {
 
     @Provides
-    @Singleton
     fun providesFirebaseAuth() : FirebaseAuth = Firebase.auth
 
     @Provides
-    @Singleton
     fun providesFirebaseDB() : FirebaseFirestore = Firebase.firestore
 
     @Provides
-    @Singleton
     fun provideFirbaseStorage() :  FirebaseStorage = Firebase.storage
 
 

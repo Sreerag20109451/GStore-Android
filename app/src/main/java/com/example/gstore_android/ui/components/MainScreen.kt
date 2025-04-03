@@ -4,9 +4,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.gstore_android.navigation.AuthNavigation
 import com.example.gstore_android.ui.components.auth.SignupScreen
 import com.example.gstore_android.viewmodels.AuthViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun MainScreen(modifier: Modifier , authViewModel : AuthViewModel = hiltViewModel<AuthViewModel>()){
@@ -14,7 +14,8 @@ fun MainScreen(modifier: Modifier , authViewModel : AuthViewModel = hiltViewMode
     var currentUser = authViewModel.currentUser
 
     if(currentUser==null){
-        SignupScreen()
+
+        AuthNavigation()
     }
     else{
         Text("Yet to be implemented")
