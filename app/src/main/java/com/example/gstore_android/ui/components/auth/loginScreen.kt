@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -47,6 +48,11 @@ fun LoginScreen(navigateToSignup: () -> Unit) {
         Column(modifier = Modifier.background(color = Color.DarkGray).padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally ,
             verticalArrangement = Arrangement.SpaceBetween)  {
+            Row ( horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
+                Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = "g", modifier = Modifier.size(40.dp))
+                Spacer(modifier = Modifier.size(8.dp))
+                Text("Welcome to GStores", color = Color.White)
+            }
             OutlinedTextField(value = email, onValueChange = {email = it }, modifier = Modifier.padding(4.dp),
                 label = {   Icon(imageVector = Icons.Default.Email,
                     contentDescription = "icon")}, placeholder = {Text("Email")} )
@@ -55,8 +61,6 @@ fun LoginScreen(navigateToSignup: () -> Unit) {
                 placeholder = {Text("Password")}  )
             Spacer(modifier = Modifier.size(30.dp))
             Button(onClick = {} , colors = ButtonDefaults.buttonColors(Color.Blue)) { Text("Login", color = Color.White )}
-            HorizontalDivider(modifier = Modifier.padding(10.dp), thickness = 4.dp )
-            Text(text =  "Login with your Google Account here", fontSize = 14.sp, fontFamily = FontFamily.SansSerif , modifier = Modifier.clickable{ })
             Spacer(modifier = Modifier.size(30.dp))
             Button(onClick = {}, colors = ButtonDefaults.buttonColors(Color.Blue) ) {
 
@@ -67,7 +71,7 @@ fun LoginScreen(navigateToSignup: () -> Unit) {
                 }
             }
             HorizontalDivider(modifier = Modifier.padding(10.dp), thickness = 4.dp )
-            Text(text =  "Do not have an account?, Sign up here", fontSize = 14.sp, fontFamily = FontFamily.SansSerif , modifier = Modifier.clickable{ navigateToSignup()})
+            Text(text =  "Do not have an account? Sign up here", fontSize = 14.sp, fontFamily = FontFamily.SansSerif , modifier = Modifier.clickable{ navigateToSignup()})
 
 
 

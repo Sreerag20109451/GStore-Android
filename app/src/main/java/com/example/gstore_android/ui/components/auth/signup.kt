@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -51,6 +52,12 @@ fun SignupScreen(navigateToLogin: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally ,
             verticalArrangement = Arrangement.SpaceBetween)  {
 
+            Row ( horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically){
+                Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = "g", modifier = Modifier.size(40.dp))
+                Spacer(modifier = Modifier.size(8.dp))
+                Text("Welcome to GStores", color = Color.White)
+            }
+            Spacer(modifier = Modifier.size(30.dp))
             OutlinedTextField(value = name, onValueChange = {name = it },
                 modifier = Modifier.padding(4.dp), label = {   Icon(imageVector = Icons.Default.Person, contentDescription = "icon")} , placeholder = {Text("Name")})
             OutlinedTextField(value = email, onValueChange = {email = it }, modifier = Modifier.padding(4.dp),
