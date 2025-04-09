@@ -25,9 +25,22 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth, var firestore :
 
      var currentUser = mutableStateOf(auth.currentUser?.uid)
     var isLoading  =   mutableStateOf(false)
-    var isError = mutableStateOf(false)
     var popUpmessage = mutableStateOf<String?>(null)
     var userSignedIn : MutableState<User?> = mutableStateOf<User?>(null)
+
+    init {
+
+        val isUserFound = auth.currentUser
+        if(isUserFound !=null){
+
+            viewModelScope.launch {
+               val userdata =  authRepo.getUserData(isUserFound.uid)
+                userSignedIn.value = userdata
+            }
+
+        }
+
+    }
 
 
     @OptIn(ExperimentalUuidApi::class)

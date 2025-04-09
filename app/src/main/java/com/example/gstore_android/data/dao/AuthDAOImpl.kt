@@ -74,4 +74,12 @@ class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : F
         return false
     }
 
+    override suspend fun loginUser(email: String, password: String) : Boolean {
+
+        val userlogin = auth.signInWithEmailAndPassword(email, password).await()
+        if(userlogin.user!=null) return true
+        return false
+
+    }
+
 }

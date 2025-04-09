@@ -8,5 +8,6 @@ interface AuthDAO {
     suspend fun  getUser(uid : String) :  User?
     suspend fun signUpUser(name : String, email : String, password : String) : Boolean
     suspend fun checkIfEmailExisrts(email : String) : Boolean
+    suspend fun loginUser(email: String, password: String) : Boolean
 
 }

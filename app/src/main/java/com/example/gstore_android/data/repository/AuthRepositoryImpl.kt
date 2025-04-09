@@ -3,6 +3,7 @@ package com.example.gstore_android.data.repository
 import android.util.Log
 import com.example.gstore_android.data.dao.AuthDAO
 import com.example.gstore_android.data.dao.AuthDAOImpl
+import com.example.gstore_android.data.models.User
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
@@ -18,6 +19,12 @@ class AuthRepositoryImpl @Inject constructor(val auth : FirebaseAuth , val authD
         return false
 
 
+    }
+
+    override suspend fun getUserData(uid: String): User? {
+
+        val user = authDAOImpl.getUser(uid)
+        return  user
     }
 
     override suspend fun emailAlreadyExists(email: String): Boolean {
