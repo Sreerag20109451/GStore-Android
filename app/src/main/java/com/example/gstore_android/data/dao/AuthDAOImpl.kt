@@ -3,29 +3,36 @@ package com.example.gstore_android.data.dao
 import android.util.Log
 import com.example.gstore_android.data.models.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : FirebaseFirestore) : AuthDAO{
 
-     override suspend fun createUser(name: String, email: String, password: String) : Boolean{
+     override suspend fun createUser(name: String, email: String, password: String?, photouri: String?) : Boolean{
         val uid = auth.currentUser?.uid
+
+         Log.d("UID_here", "uid is ${uid}")
 
         if (uid == null) {
             Log.e("CREATE_USER_FN", "UID is null. User not signed in properly")
             return false
         }
 
+         Log.d("CREATE_START_DB", "user is creating")
+
         val user = User(
             uid = uid,
             name = name,
             email = email,
-            password = password
+            password = password,
+            photouri =  photouri
 
         )
 
          try{
+             Log.d("CREATE_START_DB22", "db will call next")
              val existingUid = firestore.collection("USERS").document(uid).get().await()
 
              if(existingUid.exists()){
@@ -33,12 +40,15 @@ class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : F
                  return  true
              }
              else{
+                 Log.d("CREATE_START_DB2425265", "db will create user")
               firestore.collection("USERS").document(uid).set(user).await()
                  return  true
 
              }
          }
          catch (exc : Exception){
+
+             Log.d("EXCEPTION_CREATION_HERE", "db exc is ${exc.localizedMessage}")
 
              return  false
 
@@ -62,8 +72,20 @@ class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : F
 
     override suspend fun signUpUser(name: String, email: String, password: String) : Boolean{
 
-        val signupResponse = auth.createUserWithEmailAndPassword(email, password).await()
-        if(signupResponse.user!=null) return true
+        Log.d("SIGNDAOREACHED", "sign in dao object called")
+        try {
+
+            val signupResponse = auth.createUserWithEmailAndPassword(email, password).await()
+            Log.d("SIGNUPRESPONSEHERE" , "resp is $signupResponse")
+            if(signupResponse.user!=null) return true
+
+        }
+        catch (ex : Exception){
+
+            Log.d("ExceptionMSHDAO", "${ex.localizedMessage}")
+
+            return  false
+        }
         return  false
 
     }
@@ -74,12 +96,59 @@ class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : F
         return false
     }
 
-    override suspend fun loginUser(email: String, password: String) : Boolean {
+    override suspend fun loginUser(email: String, password: String) : String? {
 
-        val userlogin = auth.signInWithEmailAndPassword(email, password).await()
-        if(userlogin.user!=null) return true
-        return false
+        try {
+            val userlogin = auth.signInWithEmailAndPassword(email, password).await()
 
+            // Log the whole userlogin object to inspect
+            Log.d("LOGIN_DEBUG", "UserLogin: ${userlogin.user}")
+
+            if (userlogin.user != null) {
+                val token = userlogin.user?.getIdToken(false)?.await()?.token
+                Log.d("TOKEN_DEBUG", "Token: $token")
+                return token
+            } else {
+                Log.d("LOGIN_ERROR", "User is null after sign-in")
+                return null
+            }
+        } catch (e: Exception) {
+            Log.e("LOGIN_ERROR", "Error during login: ${e.localizedMessage}")
+            return null
+        }
     }
+
+
+    override suspend fun firebaseAuthWithGoogle(idToken: String) : String? {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        val  signinRqst = auth.signInWithCredential(credential).await()
+
+
+        if(signinRqst.user!=null) {
+
+            if(signinRqst.additionalUserInfo?.isNewUser == true) {
+
+                try {
+
+                    val name = signinRqst.user?.displayName.toString()
+                    val email = signinRqst.user?.email.toString()
+                    val photouri = signinRqst.user?.photoUrl.toString()
+                    createUser(name, email, password = null, photouri = photouri)
+                }
+                catch (ex : Exception){
+                    return null
+                }
+            }
+            return  signinRqst.user?.getIdToken(true)?.await().toString()
+        }
+        else return null
+    }
+
+    override suspend fun getProfilePhoto(): Boolean {
+
+
+        return false
+    }
+
 
 }

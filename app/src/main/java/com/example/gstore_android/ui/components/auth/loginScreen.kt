@@ -1,5 +1,6 @@
 package com.example.gstore_android.ui.components.auth
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,13 +34,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gstore_android.R
+import com.example.gstore_android.ui.components.NotificationMessage
 import com.example.gstore_android.ui.theme.accentColor
 import com.example.gstore_android.ui.theme.backgroundColor
 import com.example.gstore_android.ui.theme.secondaryColor
@@ -50,11 +51,9 @@ import com.example.gstore_android.viewmodels.AuthViewModel
 @Composable
 fun LoginScreen(navigateToSignup: () -> Unit, authVM: AuthViewModel) {
 
+    val context = LocalContext.current
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
-
+    NotificationMessage(authVM)
     Box(
         modifier = Modifier.background(color = backgroundColor).fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -137,6 +136,8 @@ fun LoginScreen(navigateToSignup: () -> Unit, authVM: AuthViewModel) {
                     onClick = {
 
                         focus.clearFocus(force = true)
+                        authVM.loginUser(email, password)
+
 
                     },
                     colors = ButtonDefaults.buttonColors(
@@ -150,6 +151,7 @@ fun LoginScreen(navigateToSignup: () -> Unit, authVM: AuthViewModel) {
                     onClick = {
 
                         focus.clearFocus(force = true)
+                        authVM.googleSignUp(context as Activity)
 
 
                     }, colors = ButtonDefaults.buttonColors(

@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "142912274719",
-    "project_id": "g-store-42692",
-    "storage_bucket": "g-store-42692.firebasestorage.app"
+    "project_number": "633692138999",
+    "project_id": "gstore-final",
+    "storage_bucket": "gstore-final.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:142912274719:android:71cf12378a0768e59d702a",
+        "mobilesdk_app_id": "1:633692138999:android:2c7e3f290a4224923fd2f2",
         "android_client_info": {
           "package_name": "com.example.gstore_android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "142912274719-r736mseqtmd2ksppidd45aipb9gn8b7d.apps.googleusercontent.com",
+          "client_id": "633692138999-ve4bamfvpsekv4pa2tuvdimv8njl83ao.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gstore_android",
+            "certificate_hash": "0e057e9deff8abc48e551a2162c0d88421ce015a"
+          }
+        },
+        {
+          "client_id": "633692138999-78fn796h2m4d5u08gnqapt9nctdjhb2g.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAitjAvBCUEYUJLWL0D56BGJKS4KymO2bY"
+          "current_key": "AIzaSyDJjUcMgmcZ3eH7Aqpc-xyWnGNGtJSdGrU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "142912274719-r736mseqtmd2ksppidd45aipb9gn8b7d.apps.googleusercontent.com",
+              "client_id": "633692138999-78fn796h2m4d5u08gnqapt9nctdjhb2g.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
