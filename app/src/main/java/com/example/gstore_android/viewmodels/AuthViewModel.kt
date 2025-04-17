@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gstore_android.data.models.User
 import com.example.gstore_android.data.repository.AuthRepositoryImpl
+import com.example.gstore_android.db_seeders.ProductSeeder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,7 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
-                                        var firestore : FirebaseFirestore,
+                                        val firestore : FirebaseFirestore,
                                         val authRepo : AuthRepositoryImpl ) : ViewModel(){
 
 
@@ -26,9 +27,11 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
     var isLoading  =   mutableStateOf(false)
     var popUpmessage = mutableStateOf<String?>(null)
     var userSignedIn : MutableState<User?> = mutableStateOf<User?>(null)
+    var seeder = ProductSeeder()
 
     init{
 
+//        seeder.fireStoreSeeder(firestore)
         isLoading.value = true
         if(currentUser.value!= null){
             viewModelScope.launch {
