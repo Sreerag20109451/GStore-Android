@@ -130,9 +130,9 @@ class ProductSeeder() {
     fun fireStoreSeeder(firestore: FirebaseFirestore){
 
 
-        this.products.forEach { product -> {
+        this.products.forEach { product ->
 
-            firestore.collection("products").document().set(product).addOnSuccessListener {
+            firestore.collection("PRODUCTS").document().set(product).addOnSuccessListener {
 
                 Log.d("SEEDER_SUCCESS", "Seeded")
             }.addOnFailureListener {
@@ -140,7 +140,7 @@ class ProductSeeder() {
                 Log.d("SEEDER_FAILURE", "Seeded")
             }
 
-        } }
+        }
 
 
 

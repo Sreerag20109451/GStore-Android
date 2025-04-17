@@ -102,7 +102,7 @@ darkTheme
 
 
 
-@SuppressLint("UnrememberedMutableState")
+@SuppressLint("UnrememberedMutableState", "SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarView(themeManager: ThemeManager) {

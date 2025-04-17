@@ -27,21 +27,39 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
     var isLoading  =   mutableStateOf(false)
     var popUpmessage = mutableStateOf<String?>(null)
     var userSignedIn : MutableState<User?> = mutableStateOf<User?>(null)
-    var seeder = ProductSeeder()
+//    var seeder = ProductSeeder()
 
     init{
 
-//        seeder.fireStoreSeeder(firestore)
+        Log.d("fefef", "$currentUser is ")
+
         isLoading.value = true
+//        seeder.fireStoreSeeder(firestore)
         if(currentUser.value!= null){
             viewModelScope.launch {
+                Log.d("fefdffffef", "$currentUser is ")
 
-                userSignedIn.value = authRepo.getUserData(currentUser.value!!)
-                popUpmessage.value = "User data fetched"
-                isLoading.value = false
+              try {
+                  Log.d("dafaefaef", "$currentUser is ")
+
+                  Log.d("dgsgsdg", "$currentUser is ")
+
+                  userSignedIn.value = authRepo.getUserData(currentUser.value!!)
+                  Log.d("fafa", "$currentUser is ")
+                  popUpmessage.value = "User data fetched"
+                  isLoading.value = false
+              }
+              catch (exc : Exception){
+
+                  popUpmessage.value = "Error fetching"
+                  isLoading.value = false
+              }
 
             }
 
+        }
+        else{
+            isLoading.value = false
         }
     }
 
@@ -68,11 +86,12 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
             }
             else{
                 Log.d("BEFORESIGN", "signin starts")
-                val userSignedIn = authRepo.signUpUser(name, email, password)
+                val userSignedup = authRepo.signUpUser(name, email, password)
                 Log.d("SIGNINEND", "in-repo")
-                if(userSignedIn){
+                if(userSignedup){
                     Log.d("AFTER", "signned")
                     popUpmessage.value = "User Signed In"
+                    userSignedIn.value = authRepo.getUserData(auth.currentUser?.uid!!)
                     isLoading.value = false
                     return@launch
 
@@ -113,8 +132,7 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
             if(token != null){
                 isLoading.value = false
                 popUpmessage.value = "User logged In"
-
-                Log.d("LOGIN_WORKed", "Motherfucker does work, ${token}")
+                userSignedIn.value = authRepo.getUserData(auth.currentUser?.uid!!)
                 return@launch
             }
             else{
@@ -138,7 +156,7 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
                 isLoading.value = false
                 popUpmessage.value = "User Signed In"
 
-                Log.d("LOGIN_WORKedg", "Motherfucker does work, ${token}")
+                userSignedIn.value = authRepo.getUserData(auth.currentUser?.uid!!)
                 return@launch
             }
             else{
