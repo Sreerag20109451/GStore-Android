@@ -27,6 +27,21 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
     var popUpmessage = mutableStateOf<String?>(null)
     var userSignedIn : MutableState<User?> = mutableStateOf<User?>(null)
 
+    init{
+
+        isLoading.value = true
+        if(currentUser.value!= null){
+            viewModelScope.launch {
+
+                userSignedIn.value = authRepo.getUserData(currentUser.value!!)
+                popUpmessage.value = "User data fetched"
+                isLoading.value = false
+
+            }
+
+        }
+    }
+
 
     @OptIn(ExperimentalUuidApi::class)
     fun signupUser(name :  String, email : String, password : String) {

@@ -31,6 +31,7 @@ class MainActivity : ComponentActivity() {
             GStoreAndroidTheme {
 
               Scaffold { innerpadding ->
+
                   MainScreen(modifier = Modifier.padding(innerpadding))
               }
 
