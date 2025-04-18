@@ -1,6 +1,9 @@
 package com.example.gstore_android.ui.components
 
+import android.annotation.SuppressLint
+import android.content.pm.LauncherApps
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +17,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -23,12 +30,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,35 +52,41 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gstore_android.data.models.User
+import com.example.gstore_android.ui.components.screens.HomeAndCategoryScreen
 import com.example.gstore_android.ui.theme.PurpleGrey40
+import com.example.gstore_android.ui.theme.ThemeManager
 import com.example.gstore_android.ui.theme.accentColor
 import com.example.gstore_android.ui.theme.backgroundColor
+import com.example.gstore_android.ui.theme.rememberThemeManager
 import com.example.gstore_android.ui.theme.scaffoldbg
 import com.example.gstore_android.ui.theme.secondaryColor
 import com.example.gstore_android.viewmodels.AuthViewModel
 import com.example.gstore_android.viewmodels.ScreenViewModel
 import java.nio.file.WatchEvent
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
-fun HomeScreen (authViewModel: AuthViewModel, screenViewModel: ScreenViewModel){
+fun HomeScreen (authViewModel: AuthViewModel, screenViewModel: ScreenViewModel, themeManager: ThemeManager){
 
 
     var isCategoryOpen = screenViewModel.isCategoryOpen.value
     var isOrdersOpen  = screenViewModel.isOrdersOpen.value
     var isProfileOpen =  screenViewModel.isProfileOpen.value
     var isSearchOpen  = screenViewModel.isSearchOpen.value
+    var darkTheme = mutableStateOf(isSystemInDarkTheme())
 
 
     val userdata = authViewModel.userSignedIn.value
-    Scaffold(modifier = Modifier.fillMaxSize().background(scaffoldbg), topBar = {TopAppBarView()} , bottomBar = { BottomAppView(screenViewModel) }) { innerPadding ->
-
+    Scaffold(modifier = Modifier.fillMaxSize().background(scaffoldbg), topBar = {TopAppBarView(themeManager = themeManager)} , bottomBar = { BottomAppView(screenViewModel, themeManager) }) { innerPadding ->
+darkTheme
+        val colors = MaterialTheme.colorScheme
         Box(modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
-            .background(scaffoldbg) ) {
+            .background(colors.background) ) {
 
             if(isCategoryOpen){
-                HomeAndCategoryScreen(userdata!!)
+                HomeAndCategoryScreen(userdata!!, themeManager = themeManager)
 
             }
 
@@ -85,44 +102,70 @@ fun HomeScreen (authViewModel: AuthViewModel, screenViewModel: ScreenViewModel){
 
 
 
+@SuppressLint("UnrememberedMutableState", "SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarView(){
+fun TopAppBarView(themeManager: ThemeManager) {
 
-    TopAppBar(title = { Text("Gstore", color = accentColor) } ,   colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = backgroundColor, // this sets the background color
-        titleContentColor = accentColor,  // optional: color of the title
-        actionIconContentColor = Color.Black // optional: icon color
-    ), actions = {
-        IconButton(onClick = {} ) {
-            Icon(imageVector = Icons.Default.ShoppingCart , tint = Color.Black, contentDescription = "Go to Cart")
-        }
+    val darkTheme = themeManager.isDarkTheme
+    var colors = MaterialTheme.colorScheme
 
-    } )
+
+
+        TopAppBar(
+            title = {
+                Text("Gstore", color = colors.primary)
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = colors.background,
+                titleContentColor = colors.tertiary,
+                actionIconContentColor = colors.secondary
+            ),
+            actions = {
+                IconButton(onClick = { themeManager.toggleTheme()  }) {
+                    Icon(
+                        imageVector = if (darkTheme.value) Icons.Filled.LightMode
+                        else Icons.Filled.DarkMode,
+                        contentDescription = "Toggle theme"
+                    )
+                }
+                IconButton(onClick = { /* Handle cart click */ }) {
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = "Go to Cart",
+                        tint = colors.tertiary
+                    )
+                }
+            }
+        )
+
+
 
 }
 
 @Composable
-fun BottomAppView(screenViewModel: ScreenViewModel) {
-    Row(modifier = Modifier.fillMaxWidth().padding(bottom = 40.dp).background(backgroundColor), horizontalArrangement = Arrangement.SpaceBetween , verticalAlignment = Alignment.CenterVertically, )  {
+fun BottomAppView(screenViewModel: ScreenViewModel, themeManager: ThemeManager) {
+
+    val colors = MaterialTheme.colorScheme
+    Row(modifier = Modifier.fillMaxWidth().padding(bottom = 40.dp).background(colors.background), horizontalArrangement = Arrangement.SpaceBetween , verticalAlignment = Alignment.CenterVertically, )  {
 
         IconButton(modifier = Modifier.padding(bottom = 30.dp , top = 10.dp, start = 8.dp), onClick = {
 
         } ) {
-            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Home , tint = accentColor, contentDescription = "Go to Home")
+            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Home , tint =  colors.tertiary , contentDescription = "Go to Home")
         }
 
         IconButton(modifier = Modifier.padding(bottom = 30.dp , top = 10.dp), onClick = {} ) {
-            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Menu , tint = accentColor, contentDescription = "Go to Home")
+            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Menu , tint = colors.tertiary , contentDescription = "Go to Home")
         }
 
 
         IconButton(modifier = Modifier.padding(bottom = 30.dp, top = 10.dp), onClick = {} ) {
-            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Search , tint = accentColor, contentDescription = "Search")
+            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Search , tint = colors.tertiary , contentDescription = "Search")
         }
 
         IconButton(onClick = {} , Modifier.padding(bottom = 30.dp, top = 10.dp, end = 8.dp),) {
-            Icon(modifier = Modifier.size(60.dp),imageVector = Icons.Default.AccountBox , tint = accentColor, contentDescription = "Go to profile")
+            Icon(modifier = Modifier.size(60.dp),imageVector = Icons.Default.AccountBox , tint = colors.tertiary , contentDescription = "Go to profile")
 
         }
 

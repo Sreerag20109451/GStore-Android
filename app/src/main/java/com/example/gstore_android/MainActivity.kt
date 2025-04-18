@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.gstore_android.ui.components.MainScreen
 import com.example.gstore_android.ui.theme.GStoreAndroidTheme
+import com.example.gstore_android.ui.theme.ThemeManager
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,6 +30,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GStoreAndroidTheme {
+
 
               Scaffold { innerpadding ->
 
