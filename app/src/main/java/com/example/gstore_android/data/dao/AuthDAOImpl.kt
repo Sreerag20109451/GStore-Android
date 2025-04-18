@@ -100,20 +100,14 @@ class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : F
 
         try {
             val userlogin = auth.signInWithEmailAndPassword(email, password).await()
-
-            // Log the whole userlogin object to inspect
-            Log.d("LOGIN_DEBUG", "UserLogin: ${userlogin.user}")
-
             if (userlogin.user != null) {
                 val token = userlogin.user?.getIdToken(false)?.await()?.token
                 Log.d("TOKEN_DEBUG", "Token: $token")
                 return token
-            } else {
-                Log.d("LOGIN_ERROR", "User is null after sign-in")
-                return null
-            }
+            } else return null
+
         } catch (e: Exception) {
-            Log.e("LOGIN_ERROR", "Error during login: ${e.localizedMessage}")
+
             return null
         }
     }

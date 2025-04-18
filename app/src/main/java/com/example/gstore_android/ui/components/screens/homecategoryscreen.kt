@@ -19,11 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gstore_android.data.models.User
-import com.example.gstore_android.ui.components.CategoryCard
-import com.example.gstore_android.ui.theme.PurpleGrey40
+import com.example.gstore_android.ui.components.products.CategoryCard
 import com.example.gstore_android.ui.theme.ThemeManager
-import com.example.gstore_android.ui.theme.accentColor
-import com.example.gstore_android.ui.theme.backgroundColor
 
 
 @Composable
