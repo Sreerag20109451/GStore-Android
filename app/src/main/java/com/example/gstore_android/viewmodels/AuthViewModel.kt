@@ -27,14 +27,14 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
     var isLoading  =   mutableStateOf(false)
     var popUpmessage = mutableStateOf<String?>(null)
     var userSignedIn : MutableState<User?> = mutableStateOf<User?>(null)
-//    var seeder = ProductSeeder()
+    var seeder = ProductSeeder()
 
     init{
 
         Log.d("fefef", "$currentUser is ")
 
         isLoading.value = true
-//        seeder.fireStoreSeeder(firestore)
+        seeder.fireStoreSeeder(firestore)
         if(currentUser.value!= null){
             viewModelScope.launch {
                 Log.d("fefdffffef", "$currentUser is ")

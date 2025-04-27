@@ -1,129 +1,115 @@
 package com.example.gstore_android.db_seeders
 
 import android.util.Log
+import com.example.gstore_android.data.models.Category
+import com.example.gstore_android.data.models.Product
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ProductSeeder() {
 
-
+    val defaultUrl : String = "https://firebasestorage.googleapis.com/v0/b/gstore-final.firebasestorage.app/o/Products%2Fdefault.jpg?alt=media&token=c3b32558-96c9-46f0-a69b-91ae465be36c"
     // AI has been used to generate the data
 
-    private val defaultUrl : String = "https://firebasestorage.googleapis.com/v0/b/gstore-final.firebasestorage.app/o/Products%2Fdefault.jpg?alt=media&token=c3b32558-96c9-46f0-a69b-91ae465be36c"
 
-    private val products = listOf(
-        mapOf(
-            "name" to "Apple",
-            "category" to "Fruits",
-            "price" to 2.99,
-            "discount" to 5,
-            "quantity" to 50,
-            "brand" to "Fresh Farm",
-            "imageUrl" to "https://firebasestorage.googleapis.com/v0/b/gstore-final.firebasestorage.app/o/Products%2FFruits%2Fapple.jpg?alt=media&token=4a2120b7-efae-4ff2-841a-a0b8fec040ab"
+    private val products = listOf<Product>(
+        Product(
+            name = "Apple",
+            category = Category.Fruits,
+            price = 2.99,
+            discount = 5.0,
+            quantity = 50.0,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/gstore-final.firebasestorage.app/o/Products%2FFruits%2Fapple.jpg?alt=media&token=4a2120b7-efae-4ff2-841a-a0b8fec040ab"
         ),
-        mapOf(
-            "name" to "Banana",
-            "category" to "Fruits",
-            "price" to 1.29,
-            "discount" to 10,
-            "quantity" to 100,
-            "brand" to "Tropica",
-            "imageUrl" to "https://firebasestorage.googleapis.com/v0/b/gstore-final.firebasestorage.app/o/Products%2FFruits%2Fbanana.jpg?alt=media&token=010b6e9b-17ba-40ea-a913-723d72bef363"
+        Product(
+            name = "Banana",
+            category = Category.Fruits,
+            price = 1.29,
+            discount = 10.0,
+            quantity = 100.0,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/gstore-final.firebasestorage.app/o/Products%2FFruits%2Fbanana.jpg?alt=media&token=010b6e9b-17ba-40ea-a913-723d72bef363"
         ),
-        mapOf(
-            "name" to "Mango",
-            "category" to "Fruits",
-            "price" to 3.49,
-            "discount" to 15,
-            "quantity" to 30,
-            "brand" to "Golden Orchard",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Mango",
+            category = Category.Fruits,
+            price = 3.49,
+            discount = 15.0,
+            quantity = 30.0,
+            imageUrl = defaultUrl
         ),
-
         // Vegetables
-        mapOf(
-            "name" to "Carrot",
-            "category" to "Vegetables",
-            "price" to 1.49,
-            "discount" to 5,
-            "quantity" to 80,
-            "brand" to "Green Leaf",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Carrot",
+            category = Category.Vegetables,
+            price = 1.49,
+            discount = 5.0,
+            quantity = 80.0,
+            imageUrl = defaultUrl
         ),
-        mapOf(
-            "name" to "Broccoli",
-            "category" to "Vegetables",
-            "price" to 2.79,
-            "discount" to 8,
-            "quantity" to 60,
-            "brand" to "Farm Fresh",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Broccoli",
+            category = Category.Vegetables,
+            price = 2.79,
+            discount = 8.0,
+            quantity = 60.0,
+            imageUrl = defaultUrl
         ),
-        mapOf(
-            "name" to "Tomato",
-            "category" to "Vegetables",
-            "price" to 1.99,
-            "discount" to 12,
-            "quantity" to 90,
-            "brand" to "Nature’s Basket",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Tomato",
+            category = Category.Vegetables,
+            price = 1.99,
+            discount = 12.0,
+            quantity = 90.0,
+            imageUrl = defaultUrl
         ),
-
         // Dairy
-        mapOf(
-            "name" to "Whole Milk",
-            "category" to "Dairy",
-            "price" to 3.59,
-            "discount" to 5,
-            "quantity" to 40,
-            "brand" to "Dairyland",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Whole Milk",
+            category = Category.Dairy,
+            price = 3.59,
+            discount = 5.0,
+            quantity = 40.0,
+            imageUrl = defaultUrl
         ),
-        mapOf(
-            "name" to "Cheddar Cheese",
-            "category" to "Dairy",
-            "price" to 4.99,
-            "discount" to 10,
-            "quantity" to 25,
-            "brand" to "Cheese Co.",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Cheddar Cheese",
+            category = Category.Dairy,
+            price = 4.99,
+            discount = 10.0,
+            quantity = 25.0,
+            imageUrl = defaultUrl
         ),
-        mapOf(
-            "name" to "Butter",
-            "category" to "Dairy",
-            "price" to 2.49,
-            "discount" to 7,
-            "quantity" to 35,
-            "brand" to "Creamy Delight",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Butter",
+            category = Category.Dairy,
+            price = 2.49,
+            discount = 7.0,
+            quantity = 35.0,
+            imageUrl = defaultUrl
         ),
-
         // Cereals
-        mapOf(
-            "name" to "Oats",
-            "category" to "Cereals",
-            "price" to 3.99,
-            "discount" to 5,
-            "quantity" to 50,
-            "brand" to "Healthy Start",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Oats",
+            category = Category.Cereals,
+            price = 3.99,
+            discount = 5.0,
+            quantity = 50.0,
+            imageUrl = defaultUrl
         ),
-        mapOf(
-            "name" to "Cornflakes",
-            "category" to "Cereals",
-            "price" to 2.99,
-            "discount" to 8,
-            "quantity" to 60,
-            "brand" to "Golden Flakes",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Cornflakes",
+            category = Category.Cereals,
+            price = 2.99,
+            discount = 8.0,
+            quantity = 60.0,
+            imageUrl = defaultUrl
         ),
-        mapOf(
-            "name" to "Muesli",
-            "category" to "Cereals",
-            "price" to 5.49,
-            "discount" to 10,
-            "quantity" to 40,
-            "brand" to "NutriBite",
-            "imageUrl" to defaultUrl
+        Product(
+            name = "Muesli",
+            category = Category.Cereals,
+            price = 5.49,
+            discount = 10.0,
+            quantity = 40.0,
+            imageUrl = defaultUrl
         )
     )
 
