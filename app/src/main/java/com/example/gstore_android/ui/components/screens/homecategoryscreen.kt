@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gstore_android.data.models.Category
 import com.example.gstore_android.data.models.User
+import com.example.gstore_android.ui.components.popups.CustomProgressBar
 import com.example.gstore_android.ui.components.products.CategoryCard
 import com.example.gstore_android.ui.theme.ThemeManager
 import com.example.gstore_android.viewmodels.ProductsViewModel
@@ -35,6 +36,7 @@ import com.example.gstore_android.viewmodels.ProductsViewModel
 fun HomeAndCategoryScreen(user: User, themeManager: ThemeManager, productsViewModel : ProductsViewModel = hiltViewModel<ProductsViewModel>()){
 
     val colors = MaterialTheme.colorScheme
+    val isLoading by productsViewModel.isLoading
 
 
     Column(modifier = Modifier.fillMaxWidth().padding( start = 8.dp).background(colors.background), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.Start) {
@@ -42,6 +44,8 @@ fun HomeAndCategoryScreen(user: User, themeManager: ThemeManager, productsViewMo
         Text(text = "Welcome, ${user.name}" , fontWeight = FontWeight.Bold, fontFamily = FontFamily.Cursive, fontSize = 40.sp, color = colors.tertiary , modifier = Modifier.padding(10.dp))
         Text(text = "Browse Categories" , fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace, fontSize = 20.sp, color = colors.tertiary, modifier = Modifier.padding(10.dp))
         HorizontalDivider(modifier = Modifier.padding(start = 10.dp, end = 10.dp))
+
+
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),

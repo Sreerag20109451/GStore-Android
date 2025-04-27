@@ -40,11 +40,13 @@ class ProductsViewModel @Inject constructor(val firestore: FirebaseFirestore, va
 
 
     fun getProductsByCategories(category: Category) {
+        isLoading.value = true
         viewModelScope.launch {
             val products = productsRepo.gerAllProductsByCategories(category)
             catProducts.value = catProducts.value.toMutableMap().apply {
                 put(category, products ?: emptyList())
             }
+            isLoading.value =false
             Log.d("PROD_VM", "${catProducts.value} are the prods")
 
         }
