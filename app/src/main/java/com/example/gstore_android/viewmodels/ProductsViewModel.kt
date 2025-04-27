@@ -20,7 +20,7 @@ class ProductsViewModel @Inject constructor(val firestore: FirebaseFirestore, va
 
     val isLoading = mutableStateOf(false)
     val products = mutableStateOf<List<Product>?>(null)
-    val catProducts =  mutableStateOf<List<Product>?>(null)
+    val catProducts = mutableStateOf<Map<Category, List<Product>>>(emptyMap())
 
 
     init {
@@ -40,9 +40,11 @@ class ProductsViewModel @Inject constructor(val firestore: FirebaseFirestore, va
 
 
     fun getProductsByCategories(category: Category) {
-        val products = mutableStateOf<List<Product>?>(null)
         viewModelScope.launch {
-            catProducts.value = productsRepo.gerAllProductsByCategories(category)
+            val products = productsRepo.gerAllProductsByCategories(category)
+            catProducts.value = catProducts.value.toMutableMap().apply {
+                put(category, products ?: emptyList())
+            }
             Log.d("PROD_VM", "${catProducts.value} are the prods")
 
         }

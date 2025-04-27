@@ -35,9 +35,9 @@ fun CategoryCard(
     categoryName: Category, productsViewModel : ProductsViewModel = hiltViewModel<ProductsViewModel>()
 ) {
 
-
     val isLoading by productsViewModel.isLoading
-    val products by productsViewModel.catProducts
+    val catProducts by productsViewModel.catProducts
+    val productsForThisCategory = catProducts[categoryName] ?: emptyList()
 
 
     LaunchedEffect(categoryName) {
@@ -52,10 +52,9 @@ fun CategoryCard(
         Spacer(modifier = Modifier.size(20.dp))
         LazyRow(modifier = Modifier.padding(start = 8.dp, top = 8.dp)) {
 
-            Log.d("ProductsCheck", "${products}")
-            if(products!=null){
-                Log.d("ProductsNotNull", "${products}")
-                items(products as List<Product?>) {
+            if(!productsForThisCategory.isEmpty()){
+                Log.d("ProductsNotNull", "${productsForThisCategory}")
+                items(productsForThisCategory as List<Product?>) {
                         product ->
                     ProductCard(product!!)
 
