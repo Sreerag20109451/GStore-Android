@@ -32,6 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -51,6 +52,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gstore_android.data.models.User
 import com.example.gstore_android.ui.components.screens.HomeAndCategoryScreen
 import com.example.gstore_android.ui.theme.PurpleGrey40
@@ -89,6 +91,9 @@ darkTheme
                 HomeAndCategoryScreen(userdata!!, themeManager = themeManager)
 
             }
+            if(isSearchOpen){
+                Text("SEARCH IS OPEN")
+            }
 
 
 
@@ -105,7 +110,7 @@ darkTheme
 @SuppressLint("UnrememberedMutableState", "SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarView(themeManager: ThemeManager) {
+fun TopAppBarView(themeManager: ThemeManager, screenViewModel : ScreenViewModel = hiltViewModel<ScreenViewModel>()) {
 
     val darkTheme = themeManager.isDarkTheme
     var colors = MaterialTheme.colorScheme
@@ -145,27 +150,33 @@ fun TopAppBarView(themeManager: ThemeManager) {
 
 @Composable
 fun BottomAppView(screenViewModel: ScreenViewModel, themeManager: ThemeManager) {
+    var isCategoryOpen = screenViewModel.isCategoryOpen.value
+    var isOrdersOpen  = screenViewModel.isOrdersOpen.value
+    var isProfileOpen =  screenViewModel.isProfileOpen.value
+    var isSearchOpen  = screenViewModel.isSearchOpen.value
+
 
     val colors = MaterialTheme.colorScheme
     Row(modifier = Modifier.fillMaxWidth().padding(bottom = 40.dp).background(colors.background), horizontalArrangement = Arrangement.SpaceBetween , verticalAlignment = Alignment.CenterVertically, )  {
 
-        IconButton(modifier = Modifier.padding(bottom = 30.dp , top = 10.dp, start = 8.dp), onClick = {
+        IconButton(modifier = Modifier.padding(bottom = 30.dp , top = 10.dp, start = 8.dp),  onClick = {
+            screenViewModel.openCategoryScreen()
 
         } ) {
-            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Home , tint =  colors.tertiary , contentDescription = "Go to Home")
+            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Home , tint = if (isCategoryOpen) colors.primary else colors.tertiary , contentDescription = "Go to Home")
         }
 
-        IconButton(modifier = Modifier.padding(bottom = 30.dp , top = 10.dp), onClick = {} ) {
-            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Menu , tint = colors.tertiary , contentDescription = "Go to Home")
+        IconButton(modifier = Modifier.padding(bottom = 30.dp , top = 10.dp), onClick = { screenViewModel.openSearchScreen()} ) {
+            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Menu , tint = if (isSearchOpen) colors.primary else colors.tertiary , contentDescription = "Go to Home")
         }
 
 
-        IconButton(modifier = Modifier.padding(bottom = 30.dp, top = 10.dp), onClick = {} ) {
-            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Search , tint = colors.tertiary , contentDescription = "Search")
+        IconButton(modifier = Modifier.padding(bottom = 30.dp, top = 10.dp), onClick = {screenViewModel.openOrdersScreen()} ) {
+            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Search , tint =  if (isOrdersOpen) colors.primary else colors.tertiary , contentDescription = "Search")
         }
 
-        IconButton(onClick = {} , Modifier.padding(bottom = 30.dp, top = 10.dp, end = 8.dp),) {
-            Icon(modifier = Modifier.size(60.dp),imageVector = Icons.Default.AccountBox , tint = colors.tertiary , contentDescription = "Go to profile")
+        IconButton(onClick = {screenViewModel.openProfileScreen()} , Modifier.padding(bottom = 30.dp, top = 10.dp, end = 8.dp),) {
+            Icon(modifier = Modifier.size(60.dp),imageVector = Icons.Default.AccountBox , tint =  if (isProfileOpen) colors.primary else colors.tertiary , contentDescription = "Go to profile")
 
         }
 

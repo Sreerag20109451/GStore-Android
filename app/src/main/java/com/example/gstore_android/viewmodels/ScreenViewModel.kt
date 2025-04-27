@@ -43,5 +43,12 @@ class ScreenViewModel @Inject constructor() : ViewModel() {
         isProfileOpen.value = false
         isSearchOpen.value = true
     }
+    fun openProfileScreen(){
+
+        isCategoryOpen.value = false
+        isOrdersOpen.value = false
+        isProfileOpen.value = true
+        isSearchOpen.value = false
+    }
 
 }
