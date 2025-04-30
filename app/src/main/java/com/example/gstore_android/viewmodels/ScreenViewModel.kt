@@ -17,10 +17,12 @@ class ScreenViewModel @Inject constructor() : ViewModel() {
     var isOrdersOpen  =  mutableStateOf(false)
     var isProfileOpen =  mutableStateOf(false)
     var isSearchOpen =   mutableStateOf(false)
+    var iscartOpen = mutableStateOf(false)
 
 
     fun openCategoryScreen(){
 
+        iscartOpen.value = false
         isCategoryOpen.value = true
         isOrdersOpen.value = false
         isProfileOpen.value =false
@@ -29,6 +31,7 @@ class ScreenViewModel @Inject constructor() : ViewModel() {
 
 
     fun openOrdersScreen(){
+        iscartOpen.value = false
 
         isCategoryOpen.value = false
         isOrdersOpen.value = true
@@ -37,6 +40,7 @@ class ScreenViewModel @Inject constructor() : ViewModel() {
     }
 
     fun openSearchScreen(){
+        iscartOpen.value = false
 
         isCategoryOpen.value = false
         isOrdersOpen.value = false
@@ -44,10 +48,19 @@ class ScreenViewModel @Inject constructor() : ViewModel() {
         isSearchOpen.value = true
     }
     fun openProfileScreen(){
+        iscartOpen.value = false
 
         isCategoryOpen.value = false
         isOrdersOpen.value = false
         isProfileOpen.value = true
+        isSearchOpen.value = false
+    }
+    fun openCartScreen(){
+        iscartOpen.value = true
+
+        isCategoryOpen.value = false
+        isOrdersOpen.value = false
+        isProfileOpen.value = false
         isSearchOpen.value = false
     }
 
