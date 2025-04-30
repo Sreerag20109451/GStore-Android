@@ -1,14 +1,16 @@
 package com.example.gstore_android.data.dao
 
+import android.net.Uri
 import android.util.Log
 import com.example.gstore_android.data.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : FirebaseFirestore) : AuthDAO{
+class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val storage: FirebaseStorage, val firestore : FirebaseFirestore) : AuthDAO{
 
      override suspend fun createUser(name: String, email: String, password: String?, photouri: String?) : Boolean{
         val uid = auth.currentUser?.uid
@@ -74,11 +76,9 @@ class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : F
 
         Log.d("SIGNDAOREACHED", "sign in dao object called")
         try {
-
             val signupResponse = auth.createUserWithEmailAndPassword(email, password).await()
             Log.d("SIGNUPRESPONSEHERE" , "resp is $signupResponse")
             if(signupResponse.user!=null) return true
-
         }
         catch (ex : Exception){
 
@@ -87,7 +87,6 @@ class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : F
             return  false
         }
         return  false
-
     }
 
     override  suspend fun  checkIfEmailExisrts(email: String) : Boolean{
@@ -100,20 +99,14 @@ class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : F
 
         try {
             val userlogin = auth.signInWithEmailAndPassword(email, password).await()
-
-            // Log the whole userlogin object to inspect
-            Log.d("LOGIN_DEBUG", "UserLogin: ${userlogin.user}")
-
             if (userlogin.user != null) {
                 val token = userlogin.user?.getIdToken(false)?.await()?.token
                 Log.d("TOKEN_DEBUG", "Token: $token")
                 return token
-            } else {
-                Log.d("LOGIN_ERROR", "User is null after sign-in")
-                return null
-            }
+            } else return null
+
         } catch (e: Exception) {
-            Log.e("LOGIN_ERROR", "Error during login: ${e.localizedMessage}")
+
             return null
         }
     }
@@ -144,11 +137,37 @@ class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val firestore : F
         else return null
     }
 
-    override suspend fun getProfilePhoto(): Boolean {
+    override suspend fun UploadProfilePhoto(imageUri: Uri): Uri? {
+        var uid = auth.uid
+        var user = auth?.currentUser?.displayName
+
+        Log.d("UPLOADPR", "next is uplpad")
+        var storageRef = storage.reference.child("Users/$uid/${user}.png")
+
+        Log.d("UPLOADPRO1STORAGEINITIATED", "next is ${storageRef}")
+        var uploadTask = storageRef.putFile(imageUri).await()
+        val photourl = storageRef.downloadUrl.await()
+        if(photourl==null) return null
+
+        Log.d("UPLOADPRO1STORAGEUPLOAD", "next is ${photourl}")
+
+       try{
+           firestore.collection("USERS")
+               .document(uid.toString())
+               .update("photouri", photourl)
+               .await()
+       }
+       catch(exc: Exception){
+           Log.d("EXCEPTOPN", "${exc.message}")
+           return null
+       }
+
+        Log.d("UPLOADPROCOLLECTIONDOWNLOAD", "Downloaded ${photourl}")
 
 
-        return false
+        return photourl
     }
+
 
 
 }

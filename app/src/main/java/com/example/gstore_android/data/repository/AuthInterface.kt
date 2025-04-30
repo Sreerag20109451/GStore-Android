@@ -1,6 +1,7 @@
 package com.example.gstore_android.data.repository
 
 import android.content.Context
+import android.net.Uri
 import com.example.gstore_android.data.models.User
 
 interface AuthInterface {
@@ -10,4 +11,5 @@ interface AuthInterface {
     suspend fun  getUserData(uid : String) : User?
     suspend fun  loginUser(email: String, password: String) : String?
     suspend fun googleSignup(context: Context) : String?
+    suspend fun  UploadProfilePhoto(imageUri: Uri) : Uri?
 }

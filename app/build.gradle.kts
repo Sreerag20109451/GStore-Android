@@ -46,6 +46,11 @@ android {
 }
 
 dependencies {
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+// Accompanist for swipe (optional if using SwipeToDismiss)
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.30.1")
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
