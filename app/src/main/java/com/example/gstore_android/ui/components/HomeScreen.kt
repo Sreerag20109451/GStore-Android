@@ -56,6 +56,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gstore_android.data.models.User
 import com.example.gstore_android.ui.components.screens.AllProductsPage
 import com.example.gstore_android.ui.components.screens.HomeAndCategoryScreen
+import com.example.gstore_android.ui.components.screens.UserProfileScreen
 import com.example.gstore_android.ui.theme.PurpleGrey40
 import com.example.gstore_android.ui.theme.ThemeManager
 import com.example.gstore_android.ui.theme.accentColor
@@ -96,6 +97,9 @@ darkTheme
                 AllProductsPage()
             }
 
+            if(isProfileOpen){
+                UserProfileScreen(authViewModel)
+            }
 
 
         }

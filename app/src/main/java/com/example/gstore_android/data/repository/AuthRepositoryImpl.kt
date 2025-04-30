@@ -1,6 +1,7 @@
 package com.example.gstore_android.data.repository
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -11,10 +12,13 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(val auth : FirebaseAuth ,
                                              val authDAOImpl : AuthDAOImpl,
+                                             val storage: FirebaseStorage,
                                              val googleIdOpton : GetGoogleIdOption, val credManager: CredentialManager, val credRequest : GetCredentialRequest)  : AuthInterface {
 
     override suspend fun signUpUser(name: String, email: String, password: String): Boolean {
@@ -91,7 +95,13 @@ class AuthRepositoryImpl @Inject constructor(val auth : FirebaseAuth ,
         return null
     }
 
+    override suspend fun UploadProfilePhoto(imageUri: Uri): Uri? {
+        // Create file metadata including the content type
+
+        return  authDAOImpl.UploadProfilePhoto(imageUri)
     }
+
+}
 
 
 

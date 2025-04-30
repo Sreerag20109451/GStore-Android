@@ -1,5 +1,6 @@
 package com.example.gstore_android.data.dao
 
+import android.net.Uri
 import com.example.gstore_android.data.models.User
 
 interface AuthDAO {
@@ -10,6 +11,6 @@ interface AuthDAO {
     suspend fun checkIfEmailExisrts(email : String) : Boolean
     suspend fun loginUser(email: String, password: String) : String?
     suspend fun firebaseAuthWithGoogle(idToken : String) : String?
-    suspend fun getProfilePhoto() : Boolean
+    suspend fun  UploadProfilePhoto(imageUri: Uri) : Uri?
 
 }

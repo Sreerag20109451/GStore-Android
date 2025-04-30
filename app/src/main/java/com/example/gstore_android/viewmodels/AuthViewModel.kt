@@ -1,6 +1,7 @@
 package com.example.gstore_android.viewmodels
 
 import android.app.Activity
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +28,9 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
     var isLoading  =   mutableStateOf(false)
     var popUpmessage = mutableStateOf<String?>(null)
     var userSignedIn : MutableState<User?> = mutableStateOf<User?>(null)
-  //  var seeder = ProductSeeder()
+    val uploadedPhotoUri = mutableStateOf<Uri?>(null)
+    val imageIsLoading = mutableStateOf(false)
+
 
     init{
 
@@ -114,6 +117,15 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
 
 
 
+    }
+
+    fun uploadPicandGetPic(imageUri: Uri) {
+        viewModelScope.launch {
+            imageIsLoading.value = true
+            val photoUri = authRepo.UploadProfilePhoto(imageUri)
+            uploadedPhotoUri.value = photoUri
+            imageIsLoading.value = false
+        }
     }
 
     fun loginUser(email: String, password: String){
