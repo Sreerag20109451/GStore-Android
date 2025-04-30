@@ -37,7 +37,9 @@ fun AllProductsPage(productsViewModel : ProductsViewModel = hiltViewModel<Produc
 
         // Search Bar
         CustomSearchBar(productsViewModel)
-        SortByPriceUI(productsViewModel)
+            SortByPriceUI(productsViewModel)
+            FilterPriceUI(productsViewModel)
+
         Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -143,7 +145,7 @@ fun SortByPriceUI(productsViewModel: ProductsViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var selectedSort by remember { mutableStateOf("asc") }
 
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+    Box( contentAlignment = Alignment.Center) {
         OutlinedButton(
             onClick = { expanded = !expanded },
             modifier = Modifier.fillMaxWidth()
@@ -174,4 +176,49 @@ fun SortByPriceUI(productsViewModel: ProductsViewModel) {
         }
     }
 }
+
+@Composable
+fun FilterPriceUI(productsViewModel: ProductsViewModel) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedSort by remember { mutableStateOf(0) }
+
+    Box( contentAlignment = Alignment.Center) {
+        OutlinedButton(
+            onClick = { expanded = !expanded },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Sort by Price")
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            DropdownMenuItem(onClick = {
+                selectedSort = 1
+                productsViewModel.filterByPrice(selectedSort)
+                expanded = false
+            }, text =  {
+                Text("0-2")
+            })
+
+            DropdownMenuItem(onClick = {
+                selectedSort = 2
+                productsViewModel.filterByPrice(selectedSort)
+                expanded = false
+            }, text = {
+                Text("2-6")
+            })
+            DropdownMenuItem(onClick = {
+                selectedSort = 3
+                productsViewModel.filterByPrice(selectedSort)
+                expanded = false
+            }, text = {
+                Text("Greater than 6")
+            })
+        }
+    }
+}
+
 

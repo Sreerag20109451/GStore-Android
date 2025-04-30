@@ -89,6 +89,7 @@ class ProductsViewModel @Inject constructor(val firestore: FirebaseFirestore, va
 
     fun sortByPrice(condition: String){
 
+        displayProducts.value = products.value
 
         val sortedProducts = when(condition){
             "asc" ->  displayProducts.value?.sortedBy { product -> product.price }
@@ -97,6 +98,23 @@ class ProductsViewModel @Inject constructor(val firestore: FirebaseFirestore, va
         }
 
         displayProducts.value = sortedProducts as List<Product>?
+
+
+    }
+
+
+    fun filterByPrice(condition: Int){
+
+        displayProducts.value  = products.value
+
+        val filteredPrice = when(condition){
+            1 ->  displayProducts.value?.filter { product -> product.price <= 2.0  }
+            2 -> displayProducts.value?.filter { product -> product.price <= 6 && product.price >2 }
+            3 -> displayProducts.value?.filter { product -> product.price > 6  }
+            else -> products
+        }
+
+        displayProducts.value = filteredPrice as List<Product>?
 
 
     }
