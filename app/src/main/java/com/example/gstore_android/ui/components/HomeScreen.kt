@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gstore_android.data.models.User
+import com.example.gstore_android.ui.components.screens.AllProductsPage
 import com.example.gstore_android.ui.components.screens.HomeAndCategoryScreen
 import com.example.gstore_android.ui.theme.PurpleGrey40
 import com.example.gstore_android.ui.theme.ThemeManager
@@ -92,7 +93,7 @@ darkTheme
 
             }
             if(isSearchOpen){
-                Text("SEARCH IS OPEN")
+                AllProductsPage()
             }
 
 
@@ -167,12 +168,12 @@ fun BottomAppView(screenViewModel: ScreenViewModel, themeManager: ThemeManager) 
         }
 
         IconButton(modifier = Modifier.padding(bottom = 30.dp , top = 10.dp), onClick = { screenViewModel.openSearchScreen()} ) {
-            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Menu , tint = if (isSearchOpen) colors.primary else colors.tertiary , contentDescription = "Go to Home")
+            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Search , tint = if (isSearchOpen) colors.primary else colors.tertiary , contentDescription = "Go to Home")
         }
 
 
         IconButton(modifier = Modifier.padding(bottom = 30.dp, top = 10.dp), onClick = {screenViewModel.openOrdersScreen()} ) {
-            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Search , tint =  if (isOrdersOpen) colors.primary else colors.tertiary , contentDescription = "Search")
+            Icon(modifier = Modifier.size(60.dp), imageVector = Icons.Default.Menu , tint =  if (isOrdersOpen) colors.primary else colors.tertiary , contentDescription = "Search")
         }
 
         IconButton(onClick = {screenViewModel.openProfileScreen()} , Modifier.padding(bottom = 30.dp, top = 10.dp, end = 8.dp),) {

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddShoppingCart
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,15 +16,18 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.gstore_android.data.models.Product
 
+
+
 @Composable
-fun ProductCard(product: Product) {
+fun ProductWideCard(product : Product){
 
     val colors = MaterialTheme.colorScheme
+
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
-            .width(160.dp)  // Fixed width for LazyRow
+            .fillMaxWidth()// Fixed width for LazyRow
             .height(220.dp)
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
@@ -64,7 +66,7 @@ fun ProductCard(product: Product) {
                 ) {
                     Text(
                         text = product.name,
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = Color.White,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -72,7 +74,7 @@ fun ProductCard(product: Product) {
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = "€${product.price}",
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.9f)
                     )
                     IconButton(onClick = {}) {
@@ -83,4 +85,7 @@ fun ProductCard(product: Product) {
             }
         }
     }
+
+
+
 }
