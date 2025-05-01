@@ -17,17 +17,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gstore_android.data.models.Product
+import com.example.gstore_android.viewmodels.CartViewModel
 import com.example.gstore_android.viewmodels.ProductsViewModel
 
 
 @Composable
-fun AllProductsPage(productsViewModel : ProductsViewModel = hiltViewModel<ProductsViewModel>()) {
+fun AllProductsPage(productsViewModel : ProductsViewModel = hiltViewModel<ProductsViewModel>(), cartViewModel: CartViewModel = hiltViewModel<CartViewModel>()) {
     var selectedFilter by remember { mutableStateOf("All") }
     var products = productsViewModel.displayProducts.value
+    var notification = cartViewModel.notification.value
     fun resetFilter(){
 
         productsViewModel.displayProducts.value = productsViewModel.products.value
     }
+    if(notification!= null){
+
+        ProductAddedOrRemoved(cartViewModel)
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,6 +48,8 @@ fun AllProductsPage(productsViewModel : ProductsViewModel = hiltViewModel<Produc
         Spacer(modifier = Modifier.height(16.dp))
 
 
+
+
         Spacer(modifier = Modifier.height(16.dp))
 
         if (products != null) { // Lazy Column to display the products
@@ -48,7 +58,7 @@ fun AllProductsPage(productsViewModel : ProductsViewModel = hiltViewModel<Produc
                 contentPadding = PaddingValues(top = 16.dp)
             ) {
                 items(products) { product ->
-                    ProductWideCard(product = product)
+                    ProductWideCard(product = product, cartViewModel = cartViewModel)
                 }
             }
         }
@@ -83,15 +93,16 @@ fun AllProductsPage(productsViewModel : ProductsViewModel = hiltViewModel<Produc
 @Composable
 fun CustomSearchBar(productsViewModel: ProductsViewModel) {
     var searchString by remember { mutableStateOf("") }
-
     val colors = MaterialTheme.colorScheme
+
         OutlinedTextField(
             value = searchString,
             onValueChange = { searchString = it },
             label = { Text("Search Products") },
             placeholder = { Text("Search...") },
             modifier = Modifier
-                .height(76.dp).fillMaxWidth(),
+                .height(76.dp)
+                .fillMaxWidth(),
             singleLine = true,
             trailingIcon = {
                 IconButton(onClick = { productsViewModel.searchByNameOrCategories(searchString) }, modifier = Modifier
@@ -298,3 +309,25 @@ fun FilterBar(
     }
 }
 
+@Composable
+fun ProductAddedOrRemoved(cartViewModel: CartViewModel) {
+    fun onDismiss(){
+        cartViewModel.notification.value = null
+    }
+    AlertDialog(
+        onDismissRequest = {onDismiss()},
+        title = {
+            Text(text = "Success")
+        },
+        text = {
+            Text(text = cartViewModel.notification.value!!)
+        },
+        confirmButton = {
+            Button(
+                onClick = {onDismiss()}
+            ) {
+                Text("Ok")
+            }
+        }
+    )
+}

@@ -31,21 +31,29 @@ import com.example.gstore_android.ui.components.popups.CustomProgressBar
 import com.example.gstore_android.ui.theme.ThemeManager
 import com.example.gstore_android.ui.theme.rememberThemeManager
 import com.example.gstore_android.viewmodels.AuthViewModel
+import com.example.gstore_android.viewmodels.CartViewModel
 import com.example.gstore_android.viewmodels.ScreenViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
  fun MainScreen(modifier: Modifier, authViewModel :
                 AuthViewModel = hiltViewModel<AuthViewModel>(),
+                cartViewModel: CartViewModel =hiltViewModel<CartViewModel>(),
                 screenViewModel: ScreenViewModel = hiltViewModel<ScreenViewModel>(), themeManager: ThemeManager = rememberThemeManager()
 ) {
 
 
-     var signedInUser = authViewModel.userSignedIn.value
+     var auth = FirebaseAuth.getInstance()
+     var userLoggedIn = remember { auth.currentUser?.uid }
+    var signedInUser = authViewModel.userSignedIn.value
+//    var userLoggedIn = authViewModel.currentUserUid.value
     var isLoading = authViewModel.isLoading.value
 
     var isDark = themeManager.isDarkTheme.value
 
+
+    Log.d("JYGDUYWFDUTFY", "${signedInUser} jdbcshdbj ${userLoggedIn} ")
 
     MaterialTheme (
         colorScheme = if (isDark) darkColorScheme() else lightColorScheme()
@@ -60,7 +68,7 @@ import com.example.gstore_android.viewmodels.ScreenViewModel
 
             if (signedInUser != null) {
 
-                HomeScreen(authViewModel = authViewModel, screenViewModel = screenViewModel, themeManager = themeManager)
+                HomeScreen(authViewModel = authViewModel, screenViewModel = screenViewModel, themeManager = themeManager, cartViewModel = cartViewModel)
 
             }
             if (!isLoading && signedInUser == null) {

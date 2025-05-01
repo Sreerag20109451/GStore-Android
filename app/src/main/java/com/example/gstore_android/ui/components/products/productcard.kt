@@ -16,69 +16,69 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.gstore_android.data.models.Product
+import com.example.gstore_android.viewmodels.CartViewModel
 
 @Composable
-fun ProductCard(product: Product) {
-
+fun ProductCard(
+    product: Product,
+    cartViewModel: CartViewModel// Pass a lambda for cart actions
+) {
     val colors = MaterialTheme.colorScheme
+
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
-            .width(160.dp)  // Fixed width for LazyRow
-            .height(220.dp)
+            .width(160.dp)
+            .height(260.dp)
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             // Product Image
             Image(
-                painter = rememberAsyncImagePainter(
-                    model = product.imageUrl,
-                    onLoading = { /* You could add a shimmer effect here */ }
-                ),
+                painter = rememberAsyncImagePainter(model = product.imageUrl),
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .height(140.dp)
+                    .fillMaxWidth()
             )
 
-            // Gradient overlay for better text visibility
-            Box(
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)  // Fixed height for text area
-                    .align(Alignment.BottomCenter)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.7f)
-                            )
-                        )
-                    )
+                    .padding(horizontal = 8.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Column(
+                Text(
+                    text = product.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "€${product.price}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colors.primary
+                )
+
+                Button(
+                    onClick = {cartViewModel.addToCart(product)},
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp),
-                    verticalArrangement = Arrangement.Bottom
+                        .height(36.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = colors.primary)
                 ) {
-                    Text(
-                        text = product.name,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.White,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                    Icon(
+                        imageVector = Icons.Default.AddShoppingCart,
+                        contentDescription = "Add to Cart",
+                        modifier = Modifier.size(18.dp)
                     )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "€${product.price}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White.copy(alpha = 0.9f)
-                    )
-                    IconButton(onClick = {}) {
-
-                        Icon(Icons.Default.AddShoppingCart, contentDescription = "Add to Cart", tint = colors.tertiary)
-                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Add to Cart", style = MaterialTheme.typography.labelLarge)
                 }
             }
         }

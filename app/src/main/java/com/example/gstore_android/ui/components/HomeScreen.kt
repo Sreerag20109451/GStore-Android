@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -53,9 +54,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.gstore_android.data.models.Category
+import com.example.gstore_android.data.models.Order
+import com.example.gstore_android.data.models.Product
 import com.example.gstore_android.data.models.User
 import com.example.gstore_android.ui.components.screens.AllProductsPage
+import com.example.gstore_android.ui.components.screens.CartScreen
 import com.example.gstore_android.ui.components.screens.HomeAndCategoryScreen
+import com.example.gstore_android.ui.components.screens.OrdersScreen
 import com.example.gstore_android.ui.components.screens.UserProfileScreen
 import com.example.gstore_android.ui.theme.PurpleGrey40
 import com.example.gstore_android.ui.theme.ThemeManager
@@ -65,12 +71,14 @@ import com.example.gstore_android.ui.theme.rememberThemeManager
 import com.example.gstore_android.ui.theme.scaffoldbg
 import com.example.gstore_android.ui.theme.secondaryColor
 import com.example.gstore_android.viewmodels.AuthViewModel
+import com.example.gstore_android.viewmodels.CartViewModel
 import com.example.gstore_android.viewmodels.ScreenViewModel
 import java.nio.file.WatchEvent
+import java.util.Date
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun HomeScreen (authViewModel: AuthViewModel, screenViewModel: ScreenViewModel, themeManager: ThemeManager){
+fun HomeScreen (authViewModel: AuthViewModel, screenViewModel: ScreenViewModel, themeManager: ThemeManager, cartViewModel: CartViewModel){
 
 
     var isCategoryOpen = screenViewModel.isCategoryOpen.value
@@ -78,6 +86,7 @@ fun HomeScreen (authViewModel: AuthViewModel, screenViewModel: ScreenViewModel, 
     var isProfileOpen =  screenViewModel.isProfileOpen.value
     var isSearchOpen  = screenViewModel.isSearchOpen.value
     var darkTheme = mutableStateOf(isSystemInDarkTheme())
+    var isCartOpen = screenViewModel.iscartOpen.value
 
 
     val userdata = authViewModel.userSignedIn.value
@@ -100,6 +109,13 @@ darkTheme
             if(isProfileOpen){
                 UserProfileScreen(authViewModel)
             }
+            if(isCartOpen){
+                CartScreen(cartViewModel = cartViewModel)
+
+            }
+            if(isOrdersOpen){
+                OrdersScreen()
+            }
 
 
         }
@@ -115,7 +131,7 @@ darkTheme
 @SuppressLint("UnrememberedMutableState", "SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarView(themeManager: ThemeManager, screenViewModel : ScreenViewModel = hiltViewModel<ScreenViewModel>()) {
+fun TopAppBarView(themeManager: ThemeManager, screenViewModel : ScreenViewModel = hiltViewModel<ScreenViewModel>(), authViewModel: AuthViewModel = hiltViewModel<AuthViewModel>()) {
 
     val darkTheme = themeManager.isDarkTheme
     var colors = MaterialTheme.colorScheme
@@ -132,19 +148,23 @@ fun TopAppBarView(themeManager: ThemeManager, screenViewModel : ScreenViewModel 
                 actionIconContentColor = colors.secondary
             ),
             actions = {
-                IconButton(onClick = { themeManager.toggleTheme()  }) {
+                IconButton(onClick = {
+                    themeManager.toggleTheme()  }) {
                     Icon(
                         imageVector = if (darkTheme.value) Icons.Filled.LightMode
                         else Icons.Filled.DarkMode,
                         contentDescription = "Toggle theme"
                     )
                 }
-                IconButton(onClick = { /* Handle cart click */ }) {
+                IconButton(onClick = {  screenViewModel.iscartOpen.value = !screenViewModel.iscartOpen.value}) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = "Go to Cart",
                         tint = colors.tertiary
                     )
+                }
+                Button(onClick = { authViewModel.logout()}) {
+                    Text("Logout")
                 }
             }
         )

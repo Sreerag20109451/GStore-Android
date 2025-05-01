@@ -29,14 +29,21 @@ import com.example.gstore_android.data.models.User
 import com.example.gstore_android.ui.components.popups.CustomProgressBar
 import com.example.gstore_android.ui.components.products.CategoryCard
 import com.example.gstore_android.ui.theme.ThemeManager
+import com.example.gstore_android.viewmodels.CartViewModel
 import com.example.gstore_android.viewmodels.ProductsViewModel
 
 
 @Composable
-fun HomeAndCategoryScreen(user: User, themeManager: ThemeManager, productsViewModel : ProductsViewModel = hiltViewModel<ProductsViewModel>()){
+fun HomeAndCategoryScreen(user: User, themeManager: ThemeManager, productsViewModel : ProductsViewModel = hiltViewModel<ProductsViewModel>(), cartViewModel: CartViewModel = hiltViewModel<CartViewModel>()){
 
     val colors = MaterialTheme.colorScheme
     val isLoading by productsViewModel.isLoading
+    val notification= cartViewModel.notification.value
+
+    if(notification!= null){
+        ProductAddedOrRemoved(cartViewModel)
+    }
+
 
 
     Column(modifier = Modifier.fillMaxWidth().padding( start = 8.dp).background(colors.background), verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.Start) {

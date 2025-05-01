@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.gstore_android.data.models.Category
 import com.example.gstore_android.data.models.Product
 import com.example.gstore_android.ui.components.popups.CustomProgressBar
+import com.example.gstore_android.viewmodels.CartViewModel
 import com.example.gstore_android.viewmodels.ProductsViewModel
 import kotlinx.coroutines.delay
 import products
@@ -35,7 +36,8 @@ import products
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun CategoryCard(
-    categoryName: Category, productsViewModel : ProductsViewModel = hiltViewModel<ProductsViewModel>()
+    categoryName: Category, productsViewModel : ProductsViewModel = hiltViewModel<ProductsViewModel>(),
+    cartViewModel: CartViewModel = hiltViewModel<CartViewModel>()
 ) {
     val isLoading = remember { mutableStateOf(true) }
     val catProducts by productsViewModel.catProducts
@@ -65,7 +67,7 @@ fun CategoryCard(
                     Log.d("ProductsNotNull", "${productsForThisCategory}")
                     items(productsForThisCategory as List<Product?>) {
                             product ->
-                        ProductCard(product!!)
+                        ProductCard(product!!, cartViewModel)
 
                     }
                 }

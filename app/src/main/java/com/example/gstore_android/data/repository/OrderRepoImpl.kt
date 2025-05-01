@@ -9,10 +9,6 @@ class OrderRepoImpl @Inject constructor(val orderDAOImpl: OrderDAOImpl) : OrderR
         return orderDAOImpl.orderItem(order)
     }
 
-    override suspend fun cancelOrder(orderId: String): Boolean {
-
-        return orderDAOImpl.cancelOrder(orderId)
-    }
 
     override suspend fun getOrderForUser(userId: String): List<Order>? {
         return orderDAOImpl.getOrderForUser(userId)

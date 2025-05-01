@@ -12,6 +12,8 @@ import javax.inject.Inject
 
 class AuthDAOImpl @Inject constructor(val auth : FirebaseAuth, val storage: FirebaseStorage, val firestore : FirebaseFirestore) : AuthDAO{
 
+
+
      override suspend fun createUser(name: String, email: String, password: String?, photouri: String?) : Boolean{
         val uid = auth.currentUser?.uid
 
