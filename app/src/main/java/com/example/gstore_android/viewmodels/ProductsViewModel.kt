@@ -8,6 +8,7 @@ import com.example.gstore_android.data.models.Category
 import com.example.gstore_android.data.models.Product
 import com.example.gstore_android.data.repository.ProductsRepo
 import com.example.gstore_android.data.repository.ProductsRepoImpl
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class ProductsViewModel @Inject constructor(val firestore: FirebaseFirestore, val storage: FirebaseStorage, val productsRepo: ProductsRepoImpl) : ViewModel(){
+class ProductsViewModel @Inject constructor(val firestore: FirebaseFirestore, val storage: FirebaseStorage, val productsRepo: ProductsRepoImpl, val auth: FirebaseAuth) : ViewModel(){
 
     val isLoading = mutableStateOf(false)
     val products = mutableStateOf<List<Product>?>(null)
@@ -25,17 +26,24 @@ class ProductsViewModel @Inject constructor(val firestore: FirebaseFirestore, va
     val catProducts = mutableStateOf<Map<Category, List<Product>>>(emptyMap())
 
 
+
     init {
-        isLoading.value = true
-        viewModelScope.launch {
-            try {
-                products.value = productsRepo.getAllproducts()
-                displayProducts.value = products.value
-                isLoading.value = false
+
+        val uid  = auth.currentUser?.uid
+        if(uid!=null){
+
+            isLoading.value = true
+            viewModelScope.launch {
+                try {
+                    products.value = productsRepo.getAllproducts()
+                    displayProducts.value = products.value
+                    isLoading.value = false
+                }
+                catch(e : Exception) {
+                    isLoading.value = false
+                }
             }
-            catch(e : Exception) {
-                isLoading.value = false
-            }
+
         }
 
 

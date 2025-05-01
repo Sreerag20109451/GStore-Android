@@ -17,8 +17,8 @@ class CartRepoImpl @Inject constructor(val cartDAOImpl: CartDAOImpl) : CartRepoI
        return  cartDAOImpl.removeOneItwm(name)
     }
 
-    override suspend fun clearCart(): List<Product>? {
-     return  cartDAOImpl.clearCart()
+    override suspend fun clearCart(): Boolean {
+        return  cartDAOImpl.clearCart()
     }
 
 

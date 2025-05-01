@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
 import javax.inject.Inject
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -24,7 +25,8 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
                                         val authRepo : AuthRepositoryImpl ) : ViewModel(){
 
 
-     var currentUser = mutableStateOf(auth.currentUser?.uid)
+    var currentUserUid = mutableStateOf<String?>(null)
+     var currentUser = mutableStateOf(auth.currentUser?.uid )
     var isLoading  =   mutableStateOf(false)
     var popUpmessage = mutableStateOf<String?>(null)
     var userSignedIn : MutableState<User?> = mutableStateOf<User?>(null)
@@ -37,18 +39,12 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
         Log.d("fefef", "$currentUser is ")
 
         isLoading.value = true
-//        seeder.fireStoreSeeder(firestore)
         if(currentUser.value!= null){
             viewModelScope.launch {
-                Log.d("fefdffffef", "$currentUser is ")
-
               try {
-                  Log.d("dafaefaef", "$currentUser is ")
-
-                  Log.d("dgsgsdg", "$currentUser is ")
-
                   userSignedIn.value = authRepo.getUserData(currentUser.value!!)
-                  Log.d("fafa", "$currentUser is ")
+                  Log.d("TFYTFYTR" , "GVHfh ${userSignedIn.value?.uid}")
+                  if(userSignedIn.value!=null) currentUserUid.value = auth.currentUser?.uid
                   popUpmessage.value = "User data fetched"
                   isLoading.value = false
               }
@@ -79,31 +75,28 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
         isLoading.value = true
 
         viewModelScope.launch {
-            Log.d("BEFORCHECK", "email check starts")
             val userExists = authRepo.emailAlreadyExists(email)
-            Log.d("AFTERCHECKEAMAILFINISH", "email check finished ,${userExists} is this")
             if(userExists) {
                 popUpmessage.value = "Email Already Exists"
                 isLoading.value = false
                 return@launch
             }
             else{
-                Log.d("BEFORESIGN", "signin starts")
                 val userSignedup = authRepo.signUpUser(name, email, password)
-                Log.d("SIGNINEND", "in-repo")
                 if(userSignedup){
-                    Log.d("AFTER", "signned")
+                    kotlinx.coroutines.delay(300)
+                    currentUser.value = auth.currentUser?.uid // <<< Add this! // or better: wait until it's not null
+                    userSignedIn.value = authRepo.getUserData(currentUser.value!!)
+                    kotlinx.coroutines.delay(300)
+                    Log.d("TFYTFYTR" , "GVHfh ${userSignedIn.value?.name}")
+                    if(userSignedIn.value!=null) currentUserUid.value = auth.currentUser?.uid
+                    Log.d("TFYTFYTR" , "GVHfh ${userSignedIn.value?.uid}")
                     popUpmessage.value = "User Signed In"
-                    userSignedIn.value = authRepo.getUserData(auth.currentUser?.uid!!)
                     isLoading.value = false
                     return@launch
 
                 }
                 else{
-
-                    Log.d("AFTERSIGNFAILED", "failed sign in")
-
-
                     popUpmessage.value = "Signed up failed"
                     isLoading.value = false
                     return@launch
@@ -143,12 +136,14 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
             val token = authRepo.loginUser(email, password)
             if(token != null){
                 isLoading.value = false
-                popUpmessage.value = "User logged In"
+                kotlinx.coroutines.delay(300)
                 userSignedIn.value = authRepo.getUserData(auth.currentUser?.uid!!)
+                kotlinx.coroutines.delay(300)
+                if(userSignedIn.value!=null) currentUserUid.value = auth.currentUser?.uid
+                popUpmessage.value = "User logged In"
                 return@launch
             }
             else{
-                Log.d("FUCK_DIDNT_WORK", "fuckkkkkkkk")
                 isLoading.value =false
                 popUpmessage.value = "User login failed"
                 return@launch
@@ -162,17 +157,21 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
         isLoading.value = true
         viewModelScope.launch {
 
-            Log.d("LOGIN_TEST1", "Motherfucker does work")
+            Log.d("LOGIN_TEST1", "Works")
             val token = authRepo.googleSignup(context)
             if(token != null){
+                kotlinx.coroutines.delay(300)
+                userSignedIn.value = authRepo.getUserData(auth.currentUser?.uid!!)
+                popUpmessage.value = "User data fetched"
+                kotlinx.coroutines.delay(300)
                 isLoading.value = false
                 popUpmessage.value = "User Signed In"
-
-                userSignedIn.value = authRepo.getUserData(auth.currentUser?.uid!!)
+                if(userSignedIn.value!=null) currentUserUid.value = auth.currentUser?.uid
+                Log.d("JYfjfjhj" ,  "${currentUserUid.value}")
+                Log.d("JYGDyfudyfaudyfufyuYSFYTY" , "GVHfh ${userSignedIn.value?.uid}")
                 return@launch
             }
             else{
-                Log.d("FUCK_DIDNT_WORKg", "fuckkkkkkkk")
                 isLoading.value =false
                 popUpmessage.value = "User signup failed"
                 return@launch
@@ -180,6 +179,13 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
         }
 
 
+    }
+
+    fun logout() {
+        auth.signOut()
+        popUpmessage.value ="Logged Out"
+        userSignedIn.value =null
+        currentUserUid.value = null
     }
 
 

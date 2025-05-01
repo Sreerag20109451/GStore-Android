@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -15,77 +16,75 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.gstore_android.data.models.Product
-
+import com.example.gstore_android.viewmodels.CartViewModel
 
 
 @Composable
-fun ProductWideCard(product : Product){
-
+fun ProductWideCard(product: Product, cartViewModel: CartViewModel) {
     val colors = MaterialTheme.colorScheme
 
     Card(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         modifier = Modifier
-            .fillMaxWidth()// Fixed width for LazyRow
-            .height(220.dp)
+            .fillMaxWidth()
+            .height(160.dp)
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             // Product Image
             Image(
-                painter = rememberAsyncImagePainter(
-                    model = product.imageUrl,
-                    onLoading = { /* You could add a shimmer effect here */ }
-                ),
+                painter = rememberAsyncImagePainter(model = product.imageUrl),
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(0.4f)
+                    .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
             )
 
-            // Gradient overlay for better text visibility
-            Box(
+            Spacer(modifier = Modifier.width(12.dp))
+
+            // Product details + button
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)  // Fixed height for text area
-                    .align(Alignment.BottomCenter)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.7f)
-                            )
-                        )
-                    )
+                    .weight(0.6f)
+                    .padding(vertical = 12.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
+                Column {
                     Text(
                         text = product.name,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White,
-                        maxLines = 1,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = colors.onBackground,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "€${product.price}",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.9f)
+                        color = colors.secondary
                     )
-                    IconButton(onClick = {}) {
+                }
 
-                        Icon(Icons.Default.AddShoppingCart, contentDescription = "Add to Cart", tint = colors.tertiary)
-                    }
+                Button(
+                    onClick = { cartViewModel.addToCart(product) },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = colors.primary)
+                ) {
+                    Icon(Icons.Default.AddShoppingCart, contentDescription = "Add")
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Add to Cart")
                 }
             }
         }
     }
-
-
-
 }
+
+
+

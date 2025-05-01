@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -60,6 +61,7 @@ import com.example.gstore_android.data.models.User
 import com.example.gstore_android.ui.components.screens.AllProductsPage
 import com.example.gstore_android.ui.components.screens.CartScreen
 import com.example.gstore_android.ui.components.screens.HomeAndCategoryScreen
+import com.example.gstore_android.ui.components.screens.OrdersScreen
 import com.example.gstore_android.ui.components.screens.UserProfileScreen
 import com.example.gstore_android.ui.theme.PurpleGrey40
 import com.example.gstore_android.ui.theme.ThemeManager
@@ -69,33 +71,15 @@ import com.example.gstore_android.ui.theme.rememberThemeManager
 import com.example.gstore_android.ui.theme.scaffoldbg
 import com.example.gstore_android.ui.theme.secondaryColor
 import com.example.gstore_android.viewmodels.AuthViewModel
+import com.example.gstore_android.viewmodels.CartViewModel
 import com.example.gstore_android.viewmodels.ScreenViewModel
 import java.nio.file.WatchEvent
 import java.util.Date
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun HomeScreen (authViewModel: AuthViewModel, screenViewModel: ScreenViewModel, themeManager: ThemeManager){
+fun HomeScreen (authViewModel: AuthViewModel, screenViewModel: ScreenViewModel, themeManager: ThemeManager, cartViewModel: CartViewModel){
 
-
-
-    val singleProductOrder = Order(
-        id = "order_single",
-        products = listOf(
-            Product(
-                name = "Paneer",
-                category = Category.Dairy,
-                discount = 10.0,
-                quantity = 1.0,
-                price = 100.0,
-                imageUrl = "https://example.com/paneer.jpg"
-            )
-        ),
-        totalPrice = 100.0 - 10.0,
-        orderDate = Date(),
-        userId = "user_123",
-        userEmail = "singleproduct@example.com"
-    )
 
     var isCategoryOpen = screenViewModel.isCategoryOpen.value
     var isOrdersOpen  = screenViewModel.isOrdersOpen.value
@@ -126,8 +110,11 @@ darkTheme
                 UserProfileScreen(authViewModel)
             }
             if(isCartOpen){
-                CartScreen(singleProductOrder) { }
+                CartScreen(cartViewModel = cartViewModel)
 
+            }
+            if(isOrdersOpen){
+                OrdersScreen()
             }
 
 
@@ -144,7 +131,7 @@ darkTheme
 @SuppressLint("UnrememberedMutableState", "SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarView(themeManager: ThemeManager, screenViewModel : ScreenViewModel = hiltViewModel<ScreenViewModel>()) {
+fun TopAppBarView(themeManager: ThemeManager, screenViewModel : ScreenViewModel = hiltViewModel<ScreenViewModel>(), authViewModel: AuthViewModel = hiltViewModel<AuthViewModel>()) {
 
     val darkTheme = themeManager.isDarkTheme
     var colors = MaterialTheme.colorScheme
@@ -175,6 +162,9 @@ fun TopAppBarView(themeManager: ThemeManager, screenViewModel : ScreenViewModel 
                         contentDescription = "Go to Cart",
                         tint = colors.tertiary
                     )
+                }
+                Button(onClick = { authViewModel.logout()}) {
+                    Text("Logout")
                 }
             }
         )

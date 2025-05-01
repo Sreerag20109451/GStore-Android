@@ -13,13 +13,14 @@ import javax.inject.Inject
 
 class CartDAOImpl @Inject constructor(val firestore: FirebaseFirestore, val auth : FirebaseAuth) : CartDAO {
 
-    private val userId = FirebaseAuth.getInstance().currentUser?.uid
-    private  val cartRef = firestore
-        .collection("USERS")
-        .document(userId!!)
-        .collection("CART")
+
 
     override suspend fun addToCart(product: Product): Boolean {
+         val userId = FirebaseAuth.getInstance().currentUser?.uid
+          val cartRef = firestore
+            .collection("USERS")
+            .document(userId!!)
+            .collection("CART")
         try{
             cartRef.document().set(product).await()
             return true
@@ -33,6 +34,11 @@ class CartDAOImpl @Inject constructor(val firestore: FirebaseFirestore, val auth
     }
 
     override suspend fun getItems(): List<Product>? {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val cartRef = firestore
+            .collection("USERS")
+            .document(userId!!)
+            .collection("CART")
 
         try{
             val resp = cartRef.get().await()
@@ -46,6 +52,11 @@ class CartDAOImpl @Inject constructor(val firestore: FirebaseFirestore, val auth
     }
 
     override suspend fun removeOneItwm(name : String): List<Product>? {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val cartRef = firestore
+            .collection("USERS")
+            .document(userId!!)
+            .collection("CART")
         try{
             val resp = cartRef.whereEqualTo("name", name).get().await()
             if(resp.documents.isEmpty()) return  null
@@ -61,24 +72,30 @@ class CartDAOImpl @Inject constructor(val firestore: FirebaseFirestore, val auth
         }
 
     }
-    override suspend fun clearCart(): List<Product>? {
-        try {
+    override suspend fun clearCart(): Boolean {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        val cartRef = firestore
+            .collection("USERS")
+            .document(userId!!)
+            .collection("CART")
+
+        return try {
             val resp = cartRef.get().await()
 
             if (resp.documents.isEmpty()) {
                 Log.d("ADDCART_ERROR", "Cart is already empty.")
-                return null
+                false
+            } else {
+                resp.documents.forEach { document ->
+                    document.reference.delete().await()
+                    Log.d("REMOVE_SUCCESS", "Product removed: ${document.id}")
+                }
+                true // ✅ Return after all deletions
             }
-            resp.documents.forEach { document ->
-                document.reference.delete().await()
-                Log.d("REMOVE_SUCCESS", "Product removed: ${document.id}")
-            }
-            val cartItems = getItems()
-            return cartItems
 
         } catch (exc: Exception) {
             Log.d("ADDCART_ERROR", "Error clearing the cart: ${exc.message}")
-            return null
+            false
         }
     }
 
