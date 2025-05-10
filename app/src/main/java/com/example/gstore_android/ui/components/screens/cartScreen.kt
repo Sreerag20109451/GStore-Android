@@ -1,15 +1,18 @@
 package com.example.gstore_android.ui.components.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RemoveCircleOutline
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,11 +26,9 @@ fun CartScreen(cartViewModel: CartViewModel) {
     val totalPrice = cartViewModel.carttotal.value
     val isLoading = cartViewModel.isLoading.value
 
-
-
     Scaffold(
         bottomBar = {
-            if (cartItems!=null) {
+            if (cartItems != null) {
                 BottomAppBar(
                     modifier = Modifier.fillMaxWidth(),
                     containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -44,7 +45,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-                        Button(onClick = { cartViewModel.placeOrder()}) {
+                        Button(onClick = { cartViewModel.placeOrder() }) {
                             Text("Checkout")
                         }
                     }
@@ -56,7 +57,7 @@ fun CartScreen(cartViewModel: CartViewModel) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
-        } else if (cartItems==null) {
+        } else if (cartItems == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text("Your cart is empty.")
             }
@@ -67,7 +68,6 @@ fun CartScreen(cartViewModel: CartViewModel) {
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-
                 items(cartItems) { product ->
                     ProductCartItem(product = product, cartViewModel)
                     Divider()
@@ -79,31 +79,55 @@ fun CartScreen(cartViewModel: CartViewModel) {
 
 @Composable
 fun ProductCartItem(product: Product, cartViewModel: CartViewModel) {
-    Row(
+    var offset by remember { mutableStateOf(0f) }
+    val threshold = 40f
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onDragEnd = {
+                        // Trigger removal after drag ends
+                        if (offset > threshold) {
+                            cartViewModel.removeOneItem(product.name)
+                        }
+                        offset = 0f // Always reset
+                    }
+                ) { _, dragAmount ->
+                    // Detect rightward drag
+                    offset = (offset + dragAmount).coerceIn(0f, threshold * 2)
+                }
+            }
+            .offset(x = offset.dp)  // Visual movement
     ) {
-        if (!product.imageUrl.isNullOrEmpty()) {
-            Image(
-                painter = rememberAsyncImagePainter(product.imageUrl),
-                contentDescription = product.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(64.dp)
-                    .padding(end = 8.dp)
-            )
-        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (!product.imageUrl.isNullOrEmpty()) {
+                Image(
+                    painter = rememberAsyncImagePainter(product.imageUrl),
+                    contentDescription = product.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .padding(end = 8.dp)
+                )
+            }
 
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = product.name ?: "Unnamed",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = "Price: ₹${product.price ?: 0.0}",
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = product.name ?: "Unnamed",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = "Price: ₹${product.price ?: 0.0}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
 
             IconButton(
                 onClick = { cartViewModel.removeOneItem(product.name) }
@@ -111,11 +135,6 @@ fun ProductCartItem(product: Product, cartViewModel: CartViewModel) {
                 Icon(
                     imageVector = Icons.Default.RemoveCircleOutline,
                     contentDescription = "Remove"
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Remove",
-                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }
