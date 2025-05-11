@@ -46,7 +46,6 @@ fun SignupScreen(navigateToLogin: () -> Unit, authVM: AuthViewModel) {
         verticalArrangement = Arrangement.Center
     ) {
 
-        // Welcome section with custom background color and rounded corners
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -105,7 +104,7 @@ fun SignupScreen(navigateToLogin: () -> Unit, authVM: AuthViewModel) {
             )
         }
 
-        // Buttons for sign-up and Google Sign-Up
+
         Column(
             modifier = Modifier
                 .background(color = colors.background)
