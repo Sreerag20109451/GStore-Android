@@ -53,6 +53,12 @@ Frequently committed with the usage of the develop branch(mostly the feature nam
 MAIN -> DEVELOP BRANCH -> MAIN -> RELEASE BRANCH -> RELEASE
 
 
+## UML  Diagram - A rough Sketch
+
+[uml](https://github.com/Sreerag20109451/GStore-Android/blob/main/UML-Rotated.jpg)
+
+
+
 
 ## References
 
