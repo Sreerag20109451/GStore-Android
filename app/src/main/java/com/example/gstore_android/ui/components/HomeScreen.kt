@@ -156,7 +156,7 @@ fun TopAppBarView(themeManager: ThemeManager, screenViewModel : ScreenViewModel 
                         contentDescription = "Toggle theme"
                     )
                 }
-                IconButton(onClick = {  screenViewModel.iscartOpen.value = !screenViewModel.iscartOpen.value}) {
+                IconButton(onClick = {  screenViewModel.openCartScreen()}) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = "Go to Cart",

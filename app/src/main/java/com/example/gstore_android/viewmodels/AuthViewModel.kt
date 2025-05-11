@@ -186,6 +186,7 @@ class AuthViewModel @Inject constructor(var auth : FirebaseAuth,
         popUpmessage.value ="Logged Out"
         userSignedIn.value =null
         currentUserUid.value = null
+        uploadedPhotoUri.value = null
     }
 
 

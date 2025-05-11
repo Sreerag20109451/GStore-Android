@@ -33,7 +33,7 @@ class AuthRepositoryImpl @Inject constructor(val auth : FirebaseAuth ,
             }
         }
         catch (ex : Exception){
-            Log.d("SIGN_IN_FAILURE",ex.localizedMessage)
+            Log.d("SIGN_IN_FAILURE",ex.localizedMessage!!)
         }
 
 
