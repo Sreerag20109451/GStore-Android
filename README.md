@@ -18,7 +18,7 @@ Authentication has been implemented in this projects by using
 The main screen consists of 4 screens, including
 - User Profile screen for displaying user Data
 - Category Screen for displaying products by categories
-- A Search and Filter Screen
+- Fitering by Categories and Price, search by name or categories, sort by price.
 - Orders Screen
 
 ### Cart and  Orders
@@ -30,10 +30,10 @@ This project has implemented a demo of carts and orders.
 - Dark Mode
 - Gesture for deleting a cart item
 
-- 
+
 ## UX/DX
 
-JetPack compose was used for developing the application
+JetPack compose was used for developing the application. 
 
 ## Architecture
 
