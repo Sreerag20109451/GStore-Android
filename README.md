@@ -40,11 +40,19 @@ JetPack compose was used for developing the application
 MVVM Architecture has been used for developing the project along with Hilt for Dependency Injection. DAOs, Interfaces, Models, ViewModels  and Repositories were used extensively.
 
 
-### Other setups
+
+## 3rd Party Integrations
 - Firestore - Firestore has been used for database purposes
 -  FirebaseAuth - Firebase Authentication with Google Auth has been used for user authentication
 -  Firebase Storage - Used for storing Images
-- Coli - Has been used for image rendering
+-  Coli - Has been used for image rendering
+
+## Github workflow
+Frequently committed with the usage of the develop branch(mostly the feature name), the release branch, and tagged releases.
+
+MAIN -> DEVELOP BRANCH -> MAIN -> RELEASE BRANCH -> RELEASE
+
+
 
 ## References
 
